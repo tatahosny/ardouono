@@ -99,12 +99,26 @@
             color: green;
             margin-top: 10px;
         }
+
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            color: #777;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
     </style>
 </head>
 <body>
     <div class="background"></div>
     <div class="container">
         <img src="logo.png" alt="University Logo" class="logo">
+        <h1>Welcome to Text Encryption</h1>
         <div class="form-group">
             <label for="inputText">Enter Text:</label>
             <input type="text" id="inputText" placeholder="Type your text here">
@@ -132,6 +146,10 @@
             <output id="outputText"></output>
         </div>
         <div id="statusMessage"></div>
+        <!-- إضافة زر للانتقال إلى صفحة "تعلم التشفير" -->
+        <div class="button-container">
+            <button onclick="window.location.href='learn.html'">تعلم التشفير</button>
+        </div>
     </div>
 
     <script>
@@ -176,10 +194,8 @@
             }
         }
 
-        // باقي دوال التشفير موجودة دون تغيير...
-
         function encryptText() {
-            // نفس منطق دالة التشفير مع عرض النصوص.
+            // تنفيذ التشفير هنا بناءً على الطريقة المحددة
         }
     </script>
 </body>
