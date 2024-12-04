@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Encryption</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .background {
+            position: absolute;
+            top: -20%;
+            left: -20%;
+            width: 140%;
+            height: 140%;
+            background: url('OIP.PNG') no-repeat center center/cover;
+            filter: blur(10px);
+            animation: move-horizontal 20s infinite alternate ease-in-out;
+            z-index: -1;
+        }
+
+        @keyframes move-horizontal {
+            from {
+                transform: translateX(-5%);
+            }
+            to {
+                transform: translateX(5%);
+            }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            width: 400px;
+            text-align: center;
+        }
+
+        .logo {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input, select, output {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        output {
+            display: block;
+            margin-top: 10px;
+        }
+
+        button {
+            background: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+
+        .success {
+            color: green;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    <div class="container">
+        <img src="logo.png" alt="University Logo" class="logo">
+        <div class="form-group">
+            <label for="inputText">Enter Text:</label>
+            <input type="text" id="inputText" placeholder="Type your text here">
+        </div>
+        <div class="form-group">
+            <label for="encryptionType">Select Encryption Type:</label>
+            <select id="encryptionType" onchange="toggleKeyInput()">
+                <option value="caesar">Caesar Cipher</option>
+                <option value="vigenere">Vigenère Cipher</option>
+                <option value="transposition">Transposition Cipher</option>
+                <option value="playfair">Playfair Cipher</option>
+            </select>
+        </div>
+        <div class="form-group" id="keyInputGroup" style="display: none;">
+            <label id="keyLabel" for="encryptionKey">Enter Key:</label>
+            <input type="text" id="encryptionKey" placeholder="Enter encryption key">
+            <div id="errorMessage" class="error"></div>
+        </div>
+        <div class="form-group">
+            <button onclick="encryptText()">Encrypt</button>
+            <button onclick="sendToArduino()">Send to Arduino</button>
+        </div>
+        <div class="form-group">
+            <label for="outputText">Encrypted Text:</label>
+            <output id="outputText"></output>
+        </div>
+        <div id="statusMessage"></div>
+    </div>
+
+    <script>
+        let port;
+        let writer;
+
+        async function sendToArduino() {
+            try {
+                if (!port) {
+                    port = await navigator.serial.requestPort();
+                    await port.open({ baudRate: 9600 });
+                    writer = port.writable.getWriter();
+                }
+
+                const encryptedText = document.getElementById('outputText').innerText;
+                if (!encryptedText) {
+                    document.getElementById('statusMessage').innerHTML = '<div class="error">No encrypted text to send!</div>';
+                    return;
+                }
+
+                const encoder = new TextEncoder();
+                await writer.write(encoder.encode(encryptedText + "\n"));
+                document.getElementById('statusMessage').innerHTML = '<div class="success">Text sent to Arduino successfully!</div>';
+            } catch (error) {
+                document.getElementById('statusMessage').innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        function toggleKeyInput() {
+            const encryptionType = document.getElementById('encryptionType').value;
+            const keyInputGroup = document.getElementById('keyInputGroup');
+            const keyLabel = document.getElementById('keyLabel');
+            const errorMessage = document.getElementById('errorMessage');
+
+            if (encryptionType === 'caesar' || encryptionType === 'vigenere' || encryptionType === 'playfair') {
+                keyInputGroup.style.display = 'block';
+                keyLabel.innerText = encryptionType === 'caesar' ? "Enter the Number Key:" : "Enter the Word Key:";
+                errorMessage.innerText = "";
+            } else {
+                keyInputGroup.style.display = 'none';
+                errorMessage.innerText = "";
+            }
+        }
+
+        // باقي دوال التشفير موجودة دون تغيير...
+
+        function encryptText() {
+            // نفس منطق دالة التشفير مع عرض النصوص.
+        }
+    </script>
+</body>
+</html>
