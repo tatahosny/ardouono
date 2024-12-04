@@ -192,8 +192,140 @@
                 keyInputGroup.style.display = 'none';
                 errorMessage.innerText = "";
             }
+          }
+   function caesarCipher(text, shift) {
+            return text.replace(/[a-z]/gi, (char) => {
+                const base = char <= 'Z' ? 65 : 97;
+                return String.fromCharCode(((char.charCodeAt(0) - base + shift) % 26 + 26) % 26 + base);
+            });
         }
 
+        function vigenereCipher(text, key) {
+            let result = '';
+            let keyIndex = 0;
+            key = key.toUpperCase();
+            for (let char of text) {
+                if (/[a-z]/i.test(char)) {
+                    const base = char <= 'Z' ? 65 : 97;
+                    const shift = key[keyIndex % key.length].charCodeAt(0) - 65;
+                    result += String.fromCharCode(((char.charCodeAt(0) - base + shift) % 26) + base);
+                    keyIndex++;
+                } else {
+                    result += char;
+                }
+            }
+            return result;
+        }
+
+        function transpositionCipher(text) {
+            return text.split('').reverse().join('');
+        }
+
+        function playfairCipher(text, keyword) {
+            text = text.toUpperCase().replace(/[^A-Z]/g, "").replace(/J/g, "I");
+            keyword = keyword.toUpperCase().replace(/[^A-Z]/g, "").replace(/J/g, "I");
+
+            const alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
+            let matrix = [];
+            let used = new Set();
+
+            for (let char of keyword) {
+                if (!used.has(char)) {
+                    matrix.push(char);
+                    used.add(char);
+                }
+            }
+
+            for (let char of alphabet) {
+                if (!used.has(char)) {
+                    matrix.push(char);
+                    used.add(char);
+                }
+            }
+
+            let grid = [];
+            while (matrix.length) {
+                grid.push(matrix.splice(0, 5));
+            }
+
+            let preparedText = "";
+            for (let i = 0; i < text.length; i++) {
+                const char1 = text[i];
+                const char2 = text[i + 1] || "X";
+                if (char1 === char2) {
+                    preparedText += char1 + "X";
+                } else {
+                    preparedText += char1 + char2;
+                    i++;
+                }
+            }
+
+            if (preparedText.length % 2 !== 0) {
+                preparedText += "X";
+            }
+
+            let encryptedText = "";
+            for (let i = 0; i < preparedText.length; i += 2) {
+                const [char1, char2] = [preparedText[i], preparedText[i + 1]];
+                let [row1, col1, row2, col2] = [-1, -1, -1, -1];
+
+                for (let row = 0; row < 5; row++) {
+                    for (let col = 0; col < 5; col++) {
+                        if (grid[row][col] === char1) [row1, col1] = [row, col];
+                        if (grid[row][col] === char2) [row2, col2] = [row, col];
+                    }
+                }
+
+                if (row1 === row2) {
+                    encryptedText += grid[row1][(col1 + 1) % 5];
+                    encryptedText += grid[row2][(col2 + 1) % 5];
+                } else if (col1 === col2) {
+                    encryptedText += grid[(row1 + 1) % 5][col1];
+                    encryptedText += grid[(row2 + 1) % 5][col2];
+                } else {
+                    encryptedText += grid[row1][col2];
+                    encryptedText += grid[row2][col1];
+                }
+            }
+            return encryptedText;
+        }
+
+        function encryptText() {
+            const text = document.getElementById('inputText').value;
+            const type = document.getElementById('encryptionType').value;
+            const key = document.getElementById('encryptionKey').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            let encryptedText = '';
+            
+            // التحقق من صحة المفتاح
+            if ((type === 'caesar' && !/^\d+$/.test(key)) || 
+                ((type === 'vigenere' || type === 'playfair') && /[^A-Za-z]/.test(key))) {
+                errorMessage.innerText = "Invalid key. Please enter the correct format!";
+                return;
+            } else {
+                errorMessage.innerText = ""; // مسح رسالة الخطأ إذا كان المفتاح صحيح
+            }
+
+            switch (type) {
+                case 'caesar':
+                    const shift = parseInt(key) || 3;
+                    encryptedText = caesarCipher(text, shift);
+                    break;
+                case 'vigenere':
+                    encryptedText = vigenereCipher(text, key);
+                    break;
+                case 'transposition':
+                    encryptedText = transpositionCipher(text);
+                    break;
+                case 'playfair':
+                    encryptedText = playfairCipher(text, key);
+                    break;
+                default:
+                    encryptedText = 'Invalid encryption type!';
+            }
+
+            document.getElementById('outputText').innerText = encryptedText;
         function encryptText() {
             // تنفيذ التشفير هنا بناءً على الطريقة المحددة
         }
