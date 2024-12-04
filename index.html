@@ -111,7 +111,7 @@
         .button-container {
             margin-top: 20px;
         }
-        }    </style>
+    </style>
 </head>
 <body>
     <div class="background"></div>
@@ -151,7 +151,47 @@
     </div>
 
     <script>
-        // دوال التشفير هنا (Caesar و Playfair وغيرها)
+        let port;
+        let writer;
+
+        async function sendToArduino() {
+            try {
+                if (!port) {
+                    port = await navigator.serial.requestPort();
+                    await port.open({ baudRate: 9600 });
+                    writer = port.writable.getWriter();
+                }
+
+                const encryptedText = document.getElementById('outputText').innerText;
+                if (!encryptedText) {
+                    document.getElementById('statusMessage').innerHTML = '<div class="error">No encrypted text to send!</div>';
+                    return;
+                }
+
+                const encoder = new TextEncoder();
+                await writer.write(encoder.encode(encryptedText + "\n"));
+                document.getElementById('statusMessage').innerHTML = '<div class="success">Text sent to Arduino successfully!</div>';
+            } catch (error) {
+                document.getElementById('statusMessage').innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        function toggleKeyInput() {
+            const encryptionType = document.getElementById('encryptionType').value;
+            const keyInputGroup = document.getElementById('keyInputGroup');
+            const keyLabel = document.getElementById('keyLabel');
+            const errorMessage = document.getElementById('errorMessage');
+
+            if (encryptionType === 'caesar' || encryptionType === 'vigenere' || encryptionType === 'playfair') {
+                keyInputGroup.style.display = 'block';
+                keyLabel.innerText = encryptionType === 'caesar' ? "Enter the Number Key:" : "Enter the Word Key:";
+                errorMessage.innerText = "";
+            } else {
+                keyInputGroup.style.display = 'none';
+                errorMessage.innerText = "";
+            }
+        }
+
         function caesarCipher(text, shift) {
             return text.split('').map(char => {
                 const code = char.charCodeAt(0);
@@ -251,22 +291,6 @@
                 document.getElementById("outputText").innerText = caesarCipher(inputText, shiftValue);
             } else if (encryptionType === "playfair") {
                 document.getElementById("outputText").innerText = playfairCipher(inputText, key);
-            }
-        }
-
-        function toggleKeyInput() {
-            const encryptionType = document.getElementById('encryptionType').value;
-            const keyInputGroup = document.getElementById('keyInputGroup');
-            const keyLabel = document.getElementById('keyLabel');
-            const errorMessage = document.getElementById('errorMessage');
-
-            if (encryptionType === 'caesar' || encryptionType === 'vigenere' || encryptionType === 'playfair') {
-                keyInputGroup.style.display = 'block';
-                keyLabel.innerText = encryptionType === 'caesar' ? "Enter the Number Key:" : "Enter the Word Key:";
-                errorMessage.innerText = "";
-            } else {
-                keyInputGroup.style.display = 'none';
-                errorMessage.innerText = "";
             }
         }
     </script>
