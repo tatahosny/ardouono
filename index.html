@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Text Encryption</title>
     <style>
-      body {
+     body {
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
@@ -146,35 +146,111 @@
             <output id="outputText"></output>
         </div>
         <div id="statusMessage"></div>
-        <!-- إضافة زر للانتقال إلى صفحة "تعلم التشفير" -->
         <div class="button-container">
             <button onclick="window.location.href='learn.html'">تعلم التشفير</button>
         </div>
     </div>
 
     <script>
-        let port;
-        let writer;
-
-        async function sendToArduino() {
-            try {
-                if (!port) {
-                    port = await navigator.serial.requestPort();
-                    await port.open({ baudRate: 9600 });
-                    writer = port.writable.getWriter();
+        // دوال التشفير هنا (Caesar و Playfair وغيرها)
+        function caesarCipher(text, shift) {
+            return text.split('').map(char => {
+                const code = char.charCodeAt(0);
+                if (code >= 65 && code <= 90) {
+                    return String.fromCharCode(((code - 65 + shift) % 26) + 65);
+                } else if (code >= 97 && code <= 122) {
+                    return String.fromCharCode(((code - 97 + shift) % 26) + 97);
                 }
+                return char;
+            }).join('');
+        }
 
-                const encryptedText = document.getElementById('outputText').innerText;
-                if (!encryptedText) {
-                    document.getElementById('statusMessage').innerHTML = '<div class="error">No encrypted text to send!</div>';
+        function createPlayfairMatrix(key) {
+            const alphabet = 'ABCDEFGHIKLMNOPQRSTUVWXYZ';
+            let matrix = [];
+            let used = new Set();
+
+            key = key.toUpperCase().replace(/[^A-Z]/g, '');
+            key = key.split('').filter((char, index, self) => self.indexOf(char) === index).join('');
+            let combinedKey = key + alphabet;
+
+            for (let i = 0; i < combinedKey.length; i++) {
+                const char = combinedKey[i];
+                if (!used.has(char) && char !== 'J') {
+                    matrix.push(char);
+                    used.add(char);
+                }
+            }
+
+            return matrix;
+        }
+
+        function playfairCipher(text, key) {
+            const matrix = createPlayfairMatrix(key);
+            const digraphs = [];
+            const cleanedText = text.toUpperCase().replace(/[^A-Z]/g, '').replace(/J/g, 'I');
+
+            for (let i = 0; i < cleanedText.length; i += 2) {
+                let pair = cleanedText[i];
+                if (i + 1 < cleanedText.length) {
+                    if (cleanedText[i] === cleanedText[i + 1]) {
+                        pair += 'X';
+                        i--;
+                    } else {
+                        pair += cleanedText[i + 1];
+                    }
+                } else {
+                    pair += 'X';
+                }
+                digraphs.push(pair);
+            }
+
+            let result = '';
+            digraphs.forEach(pair => {
+                const [first, second] = pair;
+                const firstIndex = matrix.indexOf(first);
+                const secondIndex = matrix.indexOf(second);
+
+                const firstRow = Math.floor(firstIndex / 5);
+                const firstCol = firstIndex % 5;
+                const secondRow = Math.floor(secondIndex / 5);
+                const secondCol = secondIndex % 5;
+
+                if (firstRow === secondRow) {
+                    result += matrix[firstRow * 5 + (firstCol + 1) % 5];
+                    result += matrix[secondRow * 5 + (secondCol + 1) % 5];
+                } else if (firstCol === secondCol) {
+                    result += matrix[((firstRow + 1) % 5) * 5 + firstCol];
+                    result += matrix[((secondRow + 1) % 5) * 5 + secondCol];
+                } else {
+                    result += matrix[firstRow * 5 + secondCol];
+                    result += matrix[secondRow * 5 + firstCol];
+                }
+            });
+
+            return result;
+        }
+
+        function encryptText() {
+            const inputText = document.getElementById("inputText").value.toUpperCase().replace(/[^A-Z]/g, "");
+            const encryptionType = document.getElementById("encryptionType").value;
+            const key = document.getElementById("encryptionKey").value.toUpperCase().replace(/[^A-Z]/g, "");
+
+            if (!inputText) {
+                document.getElementById("outputText").innerText = "Please enter some text to encrypt!";
+                return;
+            }
+
+            // تحقق من صحة المفتاح في حال كان التشفير Caesar
+            if (encryptionType === "caesar") {
+                const shift = parseInt(key);
+                if (isNaN(shift)) {
+                    document.getElementById("outputText").innerText = "Caesar cipher requires a numeric key!";
                     return;
                 }
-
-                const encoder = new TextEncoder();
-                await writer.write(encoder.encode(encryptedText + "\n"));
-                document.getElementById('statusMessage').innerHTML = '<div class="success">Text sent to Arduino successfully!</div>';
-            } catch (error) {
-                document.getElementById('statusMessage').innerHTML = `<div class="error">Error: ${error.message}</div>`;
+                document.getElementById("outputText").innerText = caesarCipher(inputText, shift);
+            } else if (encryptionType === "playfair") {
+                document.getElementById("outputText").innerText = playfairCipher(inputText, key);
             }
         }
 
@@ -191,140 +267,6 @@
             } else {
                 keyInputGroup.style.display = 'none';
                 errorMessage.innerText = "";
-            }
-        }
-
-        function caesarCipher(text, shift) {
-    return text.split('').map(char => {
-        const code = char.charCodeAt(0);
-        // التعامل مع الحروف الكبيرة فقط (A-Z)
-        if (code >= 65 && code <= 90) {
-            return String.fromCharCode(((code - 65 + shift) % 26) + 65);
-        } 
-        // التعامل مع الحروف الصغيرة (a-z)
-        else if (code >= 97 && code <= 122) {
-            return String.fromCharCode(((code - 97 + shift) % 26) + 97);
-        }
-        return char;  // إذا كان الحرف ليس في النطاق A-Z أو a-z
-    }).join('');
-}
-        }
-
-        function vigenereCipher(text, key) {
-            let result = '';
-            let keyIndex = 0;
-            for (let i = 0; i < text.length; i++) {
-                const letter = text[i];
-                const keyLetter = key[keyIndex % key.length];
-                const shift = keyLetter.charCodeAt(0) - 65;
-                const encryptedLetter = String.fromCharCode(((letter.charCodeAt(0) - 65 + shift) % 26) + 65);
-                result += encryptedLetter;
-                keyIndex++;
-            }
-            return result;
-        }
-
-        function transpositionCipher(text) {
-            return text.split('').reverse().join('');
-        }
-
-        function playfairCipher(text, key) {
-           function createPlayfairMatrix(key) {
-    const alphabet = 'ABCDEFGHIKLMNOPQRSTUVWXYZ';  // نستثني J
-    let matrix = [];
-    let used = new Set();
-
-    // إزالة الحروف المتكررة في المفتاح
-    key = key.toUpperCase().replace(/[^A-Z]/g, '');
-    key = key.split('').filter((char, index, self) => self.indexOf(char) === index).join('');
-
-    let combinedKey = key + alphabet;
-
-    // بناء المصفوفة 5x5
-    for (let i = 0; i < combinedKey.length; i++) {
-        const char = combinedKey[i];
-        if (!used.has(char) && char !== 'J') {
-            matrix.push(char);
-            used.add(char);
-        }
-    }
-
-    return matrix;
-}
-
-function playfairCipher(text, key) {
-    const matrix = createPlayfairMatrix(key);
-    const digraphs = [];
-    const cleanedText = text.toUpperCase().replace(/[^A-Z]/g, '').replace(/J/g, 'I'); // إزالة الحروف غير المطلوبة
-
-    // تقسيم النص إلى زوجين
-    for (let i = 0; i < cleanedText.length; i += 2) {
-        let pair = cleanedText[i];
-        if (i + 1 < cleanedText.length) {
-            if (cleanedText[i] === cleanedText[i + 1]) {
-                pair += 'X';  // إذا كان الزوج متشابه، نضيف حرف X
-                i--;  // نعيد خطوة واحدة لتجنب تكرار الحرف
-            } else {
-                pair += cleanedText[i + 1];
-            }
-        } else {
-            pair += 'X';  // إذا كان النص يحتوي على حرف واحد، نضيف حرف X
-        }
-        digraphs.push(pair);
-    }
-
-    // تشفير كل زوج
-    let result = '';
-    digraphs.forEach(pair => {
-        const [first, second] = pair;
-        const firstIndex = matrix.indexOf(first);
-        const secondIndex = matrix.indexOf(second);
-
-        const firstRow = Math.floor(firstIndex / 5);
-        const firstCol = firstIndex % 5;
-        const secondRow = Math.floor(secondIndex / 5);
-        const secondCol = secondIndex % 5;
-
-        if (firstRow === secondRow) {
-            result += matrix[firstRow * 5 + (firstCol + 1) % 5];
-            result += matrix[secondRow * 5 + (secondCol + 1) % 5];
-        } else if (firstCol === secondCol) {
-            result += matrix[((firstRow + 1) % 5) * 5 + firstCol];
-            result += matrix[((secondRow + 1) % 5) * 5 + secondCol];
-        } else {
-            result += matrix[firstRow * 5 + secondCol];
-            result += matrix[secondRow * 5 + firstCol];
-        }
-    });
-
-    return result;
-}
-
-        }
-
-        function encryptText() {
-            const inputText = document.getElementById("inputText").value.toUpperCase().replace(/[^A-Z]/g, "");
-            const encryptionType = document.getElementById("encryptionType").value;
-            const key = document.getElementById("encryptionKey").value.toUpperCase().replace(/[^A-Z]/g, "");
-
-            if (!inputText) {
-                document.getElementById("outputText").innerText = "Please enter some text to encrypt!";
-                return;
-            }
-
-            if (encryptionType === "caesar") {
-                const shift = parseInt(key);
-                if (isNaN(shift)) {
-                    document.getElementById("outputText").innerText = "Caesar cipher requires a numeric key!";
-                    return;
-                }
-                document.getElementById("outputText").innerText = caesarCipher(inputText, shift);
-            } else if (encryptionType === "vigenere") {
-                document.getElementById("outputText").innerText = vigenereCipher(inputText, key);
-            } else if (encryptionType === "transposition") {
-                document.getElementById("outputText").innerText = transpositionCipher(inputText);
-            } else if (encryptionType === "playfair") {
-                document.getElementById("outputText").innerText = playfairCipher(inputText, key);
             }
         }
     </script>
