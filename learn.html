@@ -46,20 +46,34 @@
             line-height: 1.6;
         }
 
-        .section table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
+       section table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    overflow-x: auto; /* يسمح بالتمرير الأفقي على الشاشات الصغيرة */
+}
 
-        .section table, .section th, .section td {
-            border: 1px solid #ccc;
-        }
+.section table, .section th, .section td {
+    border: 1px solid #ccc;
+}
 
-        .section th, .section td {
-            padding: 8px;
-            text-align: left;
-        }
+.section th, .section td {
+    padding: 8px;
+    text-align: left;
+}
+
+/* إضافة دعم للهواتف بحيث يمكن التمرير أفقيًا */
+@media screen and (max-width: 768px) {
+    .section table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .section th, .section td {
+        white-space: nowrap; /* يجعل النص داخل الخلايا لا يلتف */
+    }
+}
 
         .btn-container {
             text-align: center;
