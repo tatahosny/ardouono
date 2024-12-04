@@ -195,10 +195,19 @@
         }
 
         function caesarCipher(text, shift) {
-            return text.split('').map(char => {
-                const code = char.charCodeAt(0);
-                return String.fromCharCode(((code - 65 + shift) % 26) + 65);
-            }).join('');
+    return text.split('').map(char => {
+        const code = char.charCodeAt(0);
+        // التعامل مع الحروف الكبيرة فقط (A-Z)
+        if (code >= 65 && code <= 90) {
+            return String.fromCharCode(((code - 65 + shift) % 26) + 65);
+        } 
+        // التعامل مع الحروف الصغيرة (a-z)
+        else if (code >= 97 && code <= 122) {
+            return String.fromCharCode(((code - 97 + shift) % 26) + 97);
+        }
+        return char;  // إذا كان الحرف ليس في النطاق A-Z أو a-z
+    }).join('');
+}
         }
 
         function vigenereCipher(text, key) {
@@ -220,8 +229,77 @@
         }
 
         function playfairCipher(text, key) {
-            // هنا يمكنك إضافة دالة Playfair حقيقية إذا كنت بحاجة إليها
-            return text.split('').reverse().join('');
+           function createPlayfairMatrix(key) {
+    const alphabet = 'ABCDEFGHIKLMNOPQRSTUVWXYZ';  // نستثني J
+    let matrix = [];
+    let used = new Set();
+
+    // إزالة الحروف المتكررة في المفتاح
+    key = key.toUpperCase().replace(/[^A-Z]/g, '');
+    key = key.split('').filter((char, index, self) => self.indexOf(char) === index).join('');
+
+    let combinedKey = key + alphabet;
+
+    // بناء المصفوفة 5x5
+    for (let i = 0; i < combinedKey.length; i++) {
+        const char = combinedKey[i];
+        if (!used.has(char) && char !== 'J') {
+            matrix.push(char);
+            used.add(char);
+        }
+    }
+
+    return matrix;
+}
+
+function playfairCipher(text, key) {
+    const matrix = createPlayfairMatrix(key);
+    const digraphs = [];
+    const cleanedText = text.toUpperCase().replace(/[^A-Z]/g, '').replace(/J/g, 'I'); // إزالة الحروف غير المطلوبة
+
+    // تقسيم النص إلى زوجين
+    for (let i = 0; i < cleanedText.length; i += 2) {
+        let pair = cleanedText[i];
+        if (i + 1 < cleanedText.length) {
+            if (cleanedText[i] === cleanedText[i + 1]) {
+                pair += 'X';  // إذا كان الزوج متشابه، نضيف حرف X
+                i--;  // نعيد خطوة واحدة لتجنب تكرار الحرف
+            } else {
+                pair += cleanedText[i + 1];
+            }
+        } else {
+            pair += 'X';  // إذا كان النص يحتوي على حرف واحد، نضيف حرف X
+        }
+        digraphs.push(pair);
+    }
+
+    // تشفير كل زوج
+    let result = '';
+    digraphs.forEach(pair => {
+        const [first, second] = pair;
+        const firstIndex = matrix.indexOf(first);
+        const secondIndex = matrix.indexOf(second);
+
+        const firstRow = Math.floor(firstIndex / 5);
+        const firstCol = firstIndex % 5;
+        const secondRow = Math.floor(secondIndex / 5);
+        const secondCol = secondIndex % 5;
+
+        if (firstRow === secondRow) {
+            result += matrix[firstRow * 5 + (firstCol + 1) % 5];
+            result += matrix[secondRow * 5 + (secondCol + 1) % 5];
+        } else if (firstCol === secondCol) {
+            result += matrix[((firstRow + 1) % 5) * 5 + firstCol];
+            result += matrix[((secondRow + 1) % 5) * 5 + secondCol];
+        } else {
+            result += matrix[firstRow * 5 + secondCol];
+            result += matrix[secondRow * 5 + firstCol];
+        }
+    });
+
+    return result;
+}
+
         }
 
         function encryptText() {
