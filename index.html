@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Text Encryption</title>
     <style>
-     body {
+  body {
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
@@ -110,9 +110,7 @@
 
         .button-container {
             margin-top: 20px;
-        }
-
-    </style>
+        }    </style>
 </head>
 <body>
     <div class="background"></div>
@@ -243,12 +241,13 @@
 
             // تحقق من صحة المفتاح في حال كان التشفير Caesar
             if (encryptionType === "caesar") {
-                const shift = parseInt(key);
-                if (isNaN(shift)) {
-                    document.getElementById("outputText").innerText = "Caesar cipher requires a numeric key!";
+                const shift = document.getElementById("encryptionKey").value;
+                if (isNaN(shift) || shift === "") {
+                    document.getElementById("errorMessage").innerText = "Caesar cipher requires a numeric key!";
                     return;
                 }
-                document.getElementById("outputText").innerText = caesarCipher(inputText, shift);
+                const shiftValue = parseInt(shift);
+                document.getElementById("outputText").innerText = caesarCipher(inputText, shiftValue);
             } else if (encryptionType === "playfair") {
                 document.getElementById("outputText").innerText = playfairCipher(inputText, key);
             }
