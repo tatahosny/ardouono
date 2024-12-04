@@ -23,7 +23,7 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 100%;
     margin: 0 auto;
     padding: 20px;
 }
@@ -47,34 +47,35 @@ body {
 }
 
 .section table {
+    width: 100%;
     max-width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
-    overflow-x: auto; /* يسمح بالتمرير الأفقي على الشاشات الصغيرة */
-}
-
-.section table, .section th, .section td {
-    border: 1px solid #ccc;
+    overflow-x: auto;
+    table-layout: fixed; /* يجعل الجدول يستخدم كل المساحة المتاحة */
 }
 
 .section th, .section td {
+    border: 1px solid #ccc;
     padding: 8px;
     text-align: left;
-    font-size: 16px; /* تقليل حجم الخط في الجدول */
+    font-size: 16px; /* حجم الخط داخل الجدول */
+    word-wrap: break-word; /* يسمح بتقسيم الكلمات لتجنب تجاوز النص */
 }
 
-/* إضافة دعم للهواتف بحيث يمكن التمرير أفقيًا */
+/* تخصيص لعرض الجدول على الشاشات الصغيرة */
 @media screen and (max-width: 768px) {
     .section table {
         display: block;
+        width: 100%;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
-        width: 100%;
     }
 
     .section th, .section td {
-        white-space: nowrap; /* يجعل النص داخل الخلايا لا يلتف */
         font-size: 14px; /* تصغير حجم الخط على الشاشات الصغيرة */
+        white-space: nowrap; /* منع التفاف النص داخل الخلايا */
+        word-wrap: break-word; /* تقسيم الكلمات الطويلة */
     }
 }
 
@@ -103,6 +104,7 @@ body {
     font-size: 14px;
     color: #777;
 }
+
 
     </style>
 </head>
