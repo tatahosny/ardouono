@@ -194,29 +194,29 @@
         let writer;
 
         async function sendToArduino() {
-            const text = document.getElementById('inputText').value;
-            if (!text) {
-                alert("Please enter some text to send to Arduino!");
-                return;
-            }
+    const encryptedText = document.getElementById('outputText').innerText;
+    if (!encryptedText) {
+        alert("Please encrypt some text before sending it to Arduino!");
+        return;
+    }
 
-            try {
-                if (!port) {
-                    // Request permission to connect to a USB serial device
-                    port = await navigator.serial.requestPort();
-                    await port.open({ baudRate: 9600 });
-                    writer = port.writable.getWriter();
-                }
-
-                const encoder = new TextEncoder();
-                const data = encoder.encode(text);
-                await writer.write(data);
-
-                alert("Data sent to Arduino!");
-            } catch (error) {
-                console.error("Error sending data to Arduino:", error);
-            }
+    try {
+        if (!port) {
+            // Request permission to connect to a USB serial device
+            port = await navigator.serial.requestPort();
+            await port.open({ baudRate: 9600 });
+            writer = port.writable.getWriter();
         }
+
+        const encoder = new TextEncoder();
+        const data = encoder.encode(encryptedText);
+        await writer.write(data);
+
+        alert("Encrypted data sent to Arduino!");
+    } catch (error) {
+        console.error("Error sending data to Arduino:", error);
+    }
+}
 
         function toggleKeyInput() {
     const encryptionType = document.getElementById('encryptionType').value;
