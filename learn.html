@@ -10,6 +10,16 @@
             padding: 0;
             font-family: Arial, sans-serif;
             background: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
         .header {
@@ -20,12 +30,6 @@
         .header h1 {
             font-size: 30px;
             margin-bottom: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
         }
 
         .section {
@@ -46,19 +50,49 @@
             line-height: 1.6;
         }
 
-        .section table {
-            width: 100%;
-            border-collapse: collapse;
+        .footer {
+            background-color: #f8f9fa;
+            text-align: center;
+            padding: 10px;
+            color: #777;
+            border-top: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .footer-link {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: #ffdd00;
+            text-shadow: 0 0 10px #ffdd00, 0 0 20px #ffdd00, 0 0 30px #ffdd00;
+        }
+
+        .video-container, .example-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .input-field {
+            padding: 12px 20px;
+            font-size: 16px;
             margin-top: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+            background-color: #fff;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .section table, .section th, .section td {
-            border: 1px solid #ccc;
-        }
-
-        .section th, .section td {
-            padding: 8px;
-            text-align: left;
+        .input-field:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+            outline: none;
         }
 
         .btn-container {
@@ -79,39 +113,29 @@
         .btn-container button:hover {
             background-color: #0056b3;
         }
-
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 14px;
-            color: #777;
-        }
-
     </style>
-    <!-- Google Translate Widget Script -->
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'ar',
-                includedLanguages: 'en,ar',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-            }, 'google_translate_element');
-        }
-    </script>
-    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </head>
 <body>
-    <div class="header">
-        <h1>تم بواسطة Code 14 Team</h1>
-        <p>في هذه الصفحة، ستتعلم كيفية تطبيق طرق التشفير الأربعة:</p>
+    <div class="container">
+        <div class="header">
+            <h1>تم بواسطة Mostafa Mohamed Hosny&ALI IBRAHEM &CODE 14 TEAM</h1>
+            <p>في هذه الصفحة، ستتعلم كيفية تطبيق طرق التشفير الأربعة:</p>
+        </div>
+
+        <!-- محتوى الصفحة الرئيسي هنا -->
+
     </div>
 
+    <div class="footer">
+        <a href="https://www.facebook.com/tata.hosny.7" target="_blank" class="footer-link">
+            Website created by Mostafa Mohamed Hosny
+            &alli IBRAHEM
+        </a>
+    </div>
     <div class="container">
-        <!-- زر الترجمة -->
         <div id="google_translate_element"></div>
         <br>
-    <div class="footer">
-        <p>&copy; 2024 Mostafa_Mohamed_hosny. جميع الحقوق محفوظة.</p>
+
         <!-- شرح Caesar Cipher -->
         <div class="section">
             <h2>التشفير باستخدام شفرة القيصر (Caesar Cipher)</h2>
@@ -152,168 +176,123 @@
                 </tr>
             </table>
             <p>النتيجة: "KHORR"</p>
-            <h3>فك التشفير:</h3>
-            <p>لفك التشفير، قم بتطبيق نفس المفتاح في الاتجاه المعاكس (أي تقليل العدد بدلاً من زيادته).</p>
+
+            <!-- فيديو من يوتيوب -->
+            <div class="video-container">
+                <h3>شاهد فيديو يشرح طريقة التشفير باستخدام شفرة القيصر:</h3>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/L9d4yrZVGws?si=72_AzkSDkNU8suEg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
+            <!-- مثال المستخدم للتفاعل -->
+            <div class="example-container">
+                <h3>مثال لتجربة التشفير باستخدام شفرة القيصر:</h3>
+                <p>جرب تشفير النص التالي باستخدام مفتاح 3:</p>
+                <p>النص: "WORLD"</p>
+                <input type="text" id="caesar-input" class="input-field" placeholder="أدخل الإجابة هنا">
+                <button onclick="checkCaesarCipher()">أرسل الإجابة</button>
+                <p id="caesar-feedback" class="feedback"></p>
+            </div>
         </div>
 
         <!-- شرح Vigenère Cipher -->
         <div class="section">
             <h3>التشفير باستخدام شفرة فيجنير (Vigenère Cipher)</h3>
             <p>شفرة فيجنير هي طريقة لتشفير النص باستخدام كلمة سر أو مفتاح. بدلاً من تحريك الحروف بمقدار ثابت، يتم تحريك الحروف بناءً على الحروف في المفتاح.</p>
-    
-            <h3>كيفية التشفير باستخدام شفرة فيجنير:</h3>
-            <p>نكتب النص والمفتاح، ثم نستخدم جدول فيجنير لتحديد الحروف المشفرة.</p>
-    
-            <h3>مثال:</h3>
-            <p>النص: "HELLO"</p>
-            <p>المفتاح: "KEY"</p>
-    
-            <p>تكرار المفتاح لتغطية النص:</p>
-            <pre>
-            نص:    H  E  L  L  O
-            مفتاح: K  E  Y  K  E
-            </pre>
-    
-            <p>النص المشفر:</p>
-            <pre>
-            "RIJVS"
-            </pre>
-    
-            <h3>كيفية فك التشفير:</h3>
-            <p>لفك التشفير، نستخدم نفس المفتاح ونبحث في جدول فيجنير لاسترجاع النص الأصلي.</p>
-    
-            <h3>مثال لفك التشفير:</h3>
-            <p>النص المشفر: "RIJVS"</p>
-            <p>المفتاح: "KEY"</p>
-    
-            <p>النص الأصلي بعد فك التشفير:</p>
-            <pre>
-            "HELLO"
-            </pre>
-    
-            <h3>جدول فيجنير:</h3>
-            <pre>
-                A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z
-            A | A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z
-            B | B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z  A
-            C | C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z  A  B
-            D | D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z  A  B  C
-            E | E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z  A  B  C  D
-            F | F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z  A  B  C  D  E
-            G | G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z  A  B  C  D  E  F
-            H | H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z  A  B  C  D  E  F  G
-            I | I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z  A  B  C  D  E  F  G  H
-            J | J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z  A  B  C  D  E  F  G  H  I
-            K | K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z  A  B  C  D  E  F  G  H  I  J
-            L | L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z  A  B  C  D  E  F  G  H  I  J  K
-            M | M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z  A  B  C  D  E  F  G  H  I  J  K  L
-            N | N  O  P  Q  R  S  T  U  V  W  X  Y  Z  A  B  C  D  E  F  G  H  I  J  K  L  M
-            O | O  P  Q  R  S  T  U  V  W  X  Y  Z  A  B  C  D  E  F  G  H  I  J  K  L  M  N
-            P | P  Q  R  S  T  U  V  W  X  Y  Z  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O
-            Q | Q  R  S  T  U  V  W  X  Y  Z  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P
-            R | R  S  T  U  V  W  X  Y  Z  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q
-            S | S  T  U  V  W  X  Y  Z  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R
-            T | T  U  V  W  X  Y  Z  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S
-            U | U  V  W  X  Y  Z  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T
-            V | V  W  X  Y  Z  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U
-            W | W  X  Y  Z  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V
-            X | X  Y  Z  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W
-            Y | Y  Z  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X
-            Z | Z  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y
-            </pre>
+
+            <!-- فيديو من يوتيوب -->
+            <div class="video-container">
+                <h3>شاهد فيديو يشرح طريقة التشفير باستخدام شفرة Vigenère:</h3>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/AagPsvedGHk?si=odShh9RnhQ-InMbz" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
+            <!-- مثال المستخدم للتفاعل -->
+            <div class="example-container">
+                <h3>مثال لتجربة التشفير باستخدام شفرة فيجنير:</h3>
+                <p>جرب تشفير النص التالي باستخدام المفتاح "KEY":</p>
+                <p>النص: "HELLO"</p>
+                <input type="text" id="vigenere-input" class="input-field" placeholder="أدخل الإجابة هنا">
+                <button onclick="checkVigenereCipher()">أرسل الإجابة</button>
+                <p id="vigenere-feedback" class="feedback"></p>
+            </div>
         </div>
 
-      <!-- شرح Transposition Cipher -->
-<div class="section">
-    <h2>التشفير باستخدام شفرة التبديل (Transposition Cipher)</h2>
-    <p>شفرة التبديل هي طريقة لتغيير ترتيب الحروف في النص دون تغيير الحروف نفسها. يتم التشفير عن طريق تغيير ترتيب الحروف وفقًا لمفتاح معين.</p>
-    
-    <h3>كيفية التشفير باستخدام شفرة التبديل:</h3>
-    <p>نكتب النص في جدول بعد تقسيمه إلى صفوف وأعمدة حسب المفتاح، ثم نقرأ النص بشكل عمودي للحصول على النص المشفر.</p>
+        <!-- شرح Transposition Cipher -->
+        <div class="section">
+            <h2>التشفير باستخدام شفرة التبديل (Transposition Cipher)</h2>
+            <p>شفرة التبديل هي طريقة لتغيير ترتيب الحروف في النص دون تغيير الحروف نفسها. يتم التشفير عن طريق تغيير ترتيب الحروف وفقًا لمفتاح معين.</p>
+            
+            <!-- فيديو من يوتيوب -->
+            <div class="video-container">
+                <h3>شاهد فيديو يشرح طريقة التشفير باستخدام شفرة التبديل:</h3>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/1mdYUbMFBsw?si=ncNoUwouL7MKqOdc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
 
-    <h3>مثال:</h3>
-    <p>النص: "HELLO WORLD"</p>
-    <p>المفتاح: 4 (عدد الأعمدة)</p>
-    
-    <p>كتابة النص في الجدول:</p>
-    <pre>
-    H  E  L  L
-    O  W  O  R
-    L  D  X  X
-    </pre>
-    
-    <p>قراءة النص عموديًا:</p>
-    <pre>
-    HOL EWD LOX LRX
-    </pre>
-
-    <h3>كيفية فك التشفير:</h3>
-    <p>لفك التشفير، نعيد ترتيب النص المشفر في نفس عدد الأعمدة، ثم نقرأه بشكل أفقي للحصول على النص الأصلي.</p>
-
-    <h3>مثال على فك التشفير:</h3>
-    <p>النص المشفر: "HOL EWD LOX LRX"</p>
-    <p>المفتاح: 4</p>
-
-    <p>إعادة كتابة النص في الجدول:</p>
-    <pre>
-    H  O  L  E
-    W  D  L  O
-    X  L  R  X
-    </pre>
-
-    <p>قراءة النص بشكل أفقي:</p>
-    <pre>
-    HELLO WORLD
-    </pre>
-</div>
-
-
-        <!-- شرح Playfair Cipher -->
-        <!-- شرح Playfair Cipher -->
-<div class="section">
-    <h2>التشفير باستخدام شفرة بلاي فير (Playfair Cipher)</h2>
-    <p>شفرة بلاي فير تعتمد على شبكة مكونة من 5x5 حروف لتشفير النصوص. في هذه الشفرة، يتم تقسيم النص إلى أزواج من الحروف، ثم نبحث عن كل حرف في الجدول لتشفيره.</p>
-    
-    <h3>كيفية بناء الجدول:</h3>
-    <p>نبدأ بكتابة الحروف الأبجدية في جدول 5x5، ولكن لا نضع الحرف "J"، وبدلاً من ذلك، نستخدم "I" و "J" معًا في نفس الخانة.</p>
-
-    <table>
-        <tr>
-            <td>A</td><td>B</td><td>C</td><td>D</td><td>E</td>
-        </tr>
-        <tr>
-            <td>F</td><td>G</td><td>H</td><td>I</td><td>K</td>
-        </tr>
-        <tr>
-            <td>L</td><td>M</td><td>N</td><td>O</td><td>P</td>
-        </tr>
-        <tr>
-            <td>Q</td><td>R</td><td>S</td><td>T</td><td>U</td>
-        </tr>
-        <tr>
-            <td>V</td><td>W</td><td>X</td><td>Y</td><td>Z</td>
-        </tr>
-    </table>
-
-    <h3>كيفية التشفير باستخدام Playfair:</h3>
-    <p>قم بتقسيم النص إلى أزواج من الحروف، مثل "HE", "LL", "O". ثم قم بتطبيق القواعد الخاصة بكل زوج بناءً على الجدول.</p>
-
-    <h3>مثال:</h3>
-    <p>النص: "HELLO"</p>
-    <p>النص المشفر: "GB", "XX", "PY"</p>
-
-    <h3>فك التشفير:</h3>
-    <p>لفك التشفير، نقوم بتطبيق القواعد نفسها، لكن في الاتجاه المعاكس.</p>
-</div>
-
-
-        <!-- زر العودة للصفحة الرئيسية -->
-        <div class="btn-container">
-            <button onclick="window.location.href='index.html'">العودة إلى الصفحة الرئيسية</button>
+            <!-- مثال المستخدم للتفاعل -->
+            <div class="example-container">
+                <h3>مثال لتجربة التشفير باستخدام شفرة التبد </div>يل:</h3>
+                <p>جرب تشفير النص التالي باستخدام مفتاح 4:</p>
+                <p>النص: "HELLO WORLD"</p>
+                <input type="text" id="transposition-input" class="input-field" placeholder="أدخل الإجابة هنا">
+                <button onclick="checkTranspositionCipher()">أرسل الإجابة</button>
+                <p id="transposition-feedback" class="feedback"></p>
+            </div>
         </div>
-    </div>
-    <div class="footer">
-        <p>&copy; 2024 Code 14 Team. جميع الحقوق محفوظة.</p>
-    </div>
+
+        <!-- شرح Playfair Cipher -->
+        <div class="section">
+            <h2>التشفير باستخدام شفرة بلاي فير (Playfair Cipher)</h2>
+            <p>تشفير بلاي فير هو نوع من التشفير الثنائي حيث يتم تشفير الحروف في مجموعات مكونة من حرفين.</p>
+            
+            <!-- فيديو من يوتيوب -->
+            <div class="video-container">
+                <h3>شاهد فيديو يشرح طريقة التشفير باستخدام شفرة بلاي فير:</h3>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/FoCQDGrIOKo?si=sAZ1PrNUSXRPDa8U" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
+            <!-- مثال المستخدم للتفاعل -->
+            <div class="example-container">
+                <h3>مثال لتجربة التشفير باستخدام شفرة بلاي فير:</h3>
+                <p>جرب تشفير النص التالي باستخدام المفتاح "KEY":</p>
+                <p>النص: "HELLO"</p>
+                <input type="text" id="playfair-input" class="input-field" placeholder="أدخل الإجابة هنا">
+                <button onclick="checkPlayfairCipher()">أرسل الإجابة</button>
+                <p id="playfair-feedback" class="feedback"></p>
+            </div>
+        </div>
+        <div class="footer">
+            <a href="https://example.com" target="_blank" class="footer-link">
+                Website created by Mostafa Mohamed Hosny
+            </a>
+        </div>
+
+    <script>
+        function checkCaesarCipher() {
+            let userAnswer = document.getElementById("caesar-input").value.trim().toUpperCase();
+            let correctAnswer = "KHORR";
+            let feedback = userAnswer === correctAnswer ? "إجابتك صحيحة!" : "إجابتك خاطئة. حاول مرة أخرى.";
+            document.getElementById("caesar-feedback").innerText = feedback;
+        }
+
+        function checkVigenereCipher() {
+            let userAnswer = document.getElementById("vigenere-input").value.trim().toUpperCase();
+            let correctAnswer = "RIJVS";
+            let feedback = userAnswer === correctAnswer ? "إجابتك صحيحة!" : "إجابتك خاطئة. حاول مرة أخرى.";
+            document.getElementById("vigenere-feedback").innerText = feedback;
+        }
+
+        function checkTranspositionCipher() {
+            let userAnswer = document.getElementById("transposition-input").value.trim().toUpperCase();
+            let correctAnswer = "HOLEL WRLOD";
+            let feedback = userAnswer === correctAnswer ? "إجابتك صحيحة!" : "إجابتك خاطئة. حاول مرة أخرى.";
+            document.getElementById("transposition-feedback").innerText = feedback;
+        }
+
+        function checkPlayfairCipher() {
+            let userAnswer = document.getElementById("playfair-input").value.trim().toUpperCase();
+            let correctAnswer = "GDDLO";
+            let feedback = userAnswer === correctAnswer ? "إجابتك صحيحة!" : "إجابتك خاطئة. حاول مرة أخرى.";
+            document.getElementById("playfair-feedback").innerText = feedback;
+        }
+    </script>
 </body>
 </html>
