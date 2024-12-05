@@ -5,16 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Text Encryption</title>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
             font-family: Arial, sans-serif;
+            background: #2c3e50;
+            color: white;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             overflow: hidden;
-            background: #000;
         }
 
         .background {
@@ -42,9 +47,10 @@
             background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
             padding: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             width: 400px;
             text-align: center;
+            color: #333;
         }
 
         .logo {
@@ -60,6 +66,7 @@
             display: block;
             font-weight: bold;
             margin-bottom: 5px;
+            color: #333;
         }
 
         input, select, output {
@@ -74,6 +81,10 @@
         output {
             display: block;
             margin-top: 10px;
+            background: #f5f5f5;
+            color: #333;
+            padding: 10px;
+            border-radius: 5px;
         }
 
         button {
@@ -84,6 +95,7 @@
             border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
+            margin-top: 10px;
         }
 
         button:hover {
@@ -111,6 +123,7 @@
         .button-container {
             margin-top: 20px;
         }
+
     </style>
 </head>
 <body>
@@ -138,15 +151,18 @@
         </div>
         <div class="form-group">
             <button onclick="encryptText()">Encrypt</button>
-            <button onclick="sendToArduino()">Send to Arduino</button>
+            <button onclick="decryptText()">Decrypt</button>
         </div>
         <div class="form-group">
-            <label for="outputText">Encrypted Text:</label>
+            <label for="outputText">Encrypted/Fooled Text:</label>
             <output id="outputText"></output>
         </div>
         <div id="statusMessage"></div>
         <div class="button-container">
             <button onclick="window.location.href='learn.html'">تعلم التشفير</button>
+        </div>
+        <div class="form-group">
+            <button onclick="sendToArduino()">Send to Arduino</button>
         </div>
     </div>
 
@@ -155,144 +171,245 @@
         let writer;
 
         async function sendToArduino() {
+            const text = document.getElementById('inputText').value;
+            if (!text) {
+                alert("Please enter some text to send to Arduino!");
+                return;
+            }
+
             try {
                 if (!port) {
+                    // Request permission to connect to a USB serial device
                     port = await navigator.serial.requestPort();
                     await port.open({ baudRate: 9600 });
                     writer = port.writable.getWriter();
                 }
 
-                const encryptedText = document.getElementById('outputText').innerText;
-                if (!encryptedText) {
-                    document.getElementById('statusMessage').innerHTML = '<div class="error">No encrypted text to send!</div>';
-                    return;
-                }
-
                 const encoder = new TextEncoder();
-                await writer.write(encoder.encode(encryptedText + "\n"));
-                document.getElementById('statusMessage').innerHTML = '<div class="success">Text sent to Arduino successfully!</div>';
+                const data = encoder.encode(text);
+                await writer.write(data);
+
+                alert("Data sent to Arduino!");
             } catch (error) {
-                document.getElementById('statusMessage').innerHTML = `<div class="error">Error: ${error.message}</div>`;
+                console.error("Error sending data to Arduino:", error);
             }
         }
 
         function toggleKeyInput() {
+    const encryptionType = document.getElementById('encryptionType').value;
+    const keyInputGroup = document.getElementById('keyInputGroup');
+    keyInputGroup.style.display = 'block';  // دائماً عرض خانة المفتاح
+   }
+
+        function encryptText() {
+            const text = document.getElementById('inputText').value;
             const encryptionType = document.getElementById('encryptionType').value;
-            const keyInputGroup = document.getElementById('keyInputGroup');
-            const keyLabel = document.getElementById('keyLabel');
-            const errorMessage = document.getElementById('errorMessage');
+            const key = document.getElementById('encryptionKey').value;
 
-            if (encryptionType === 'caesar' || encryptionType === 'vigenere' || encryptionType === 'playfair') {
-                keyInputGroup.style.display = 'block';
-                keyLabel.innerText = encryptionType === 'caesar' ? "Enter the Number Key:" : "Enter the Word Key:";
-                errorMessage.innerText = "";
-            } else {
-                keyInputGroup.style.display = 'none';
-                errorMessage.innerText = "";
-            }
-        }
-
-        function caesarCipher(text, shift) {
-            return text.split('').map(char => {
-                const code = char.charCodeAt(0);
-                if (code >= 65 && code <= 90) {
-                    return String.fromCharCode(((code - 65 + shift) % 26) + 65);
-                } else if (code >= 97 && code <= 122) {
-                    return String.fromCharCode(((code - 97 + shift) % 26) + 97);
-                }
-                return char;
-            }).join('');
-        }
-
-        function createPlayfairMatrix(key) {
-            const alphabet = 'ABCDEFGHIKLMNOPQRSTUVWXYZ';
-            let matrix = [];
-            let used = new Set();
-
-            key = key.toUpperCase().replace(/[^A-Z]/g, '');
-            key = key.split('').filter((char, index, self) => self.indexOf(char) === index).join('');
-            let combinedKey = key + alphabet;
-
-            for (let i = 0; i < combinedKey.length; i++) {
-                const char = combinedKey[i];
-                if (!used.has(char) && char !== 'J') {
-                    matrix.push(char);
-                    used.add(char);
-                }
+            if (!text) {
+                document.getElementById('outputText').innerText = 'Please enter text to encrypt!';
+                return;
             }
 
-            return matrix;
+            let encryptedText = '';
+            if (encryptionType === 'caesar') {
+                encryptedText = caesarCipher(text, parseInt(key));  // Caesar Cipher Encryption
+            } else if (encryptionType === 'vigenere') {
+                encryptedText = vigenereCipher(text, key, false);  // Vigenère Cipher Encryption
+            } else if (encryptionType === 'transposition') {
+                encryptedText = transpositionEncrypt(text);  // Transposition Encryption
+            } else if (encryptionType === 'playfair') {
+                encryptedText = playfairEncrypt(text, key);  // Playfair Cipher Encryption
+            }
+
+            document.getElementById('outputText').innerText = encryptedText;
         }
 
-        function playfairCipher(text, key) {
-            const matrix = createPlayfairMatrix(key);
-            const digraphs = [];
-            const cleanedText = text.toUpperCase().replace(/[^A-Z]/g, '').replace(/J/g, 'I');
+        function decryptText() {
+            const text = document.getElementById('inputText').value;
+            const encryptionType = document.getElementById('encryptionType').value;
+            const key = document.getElementById('encryptionKey').value;
 
+            if (!text) {
+                document.getElementById('outputText').innerText = 'Please enter text to decrypt!';
+                return;
+            }
+
+            let decryptedText = '';
+            if (encryptionType === 'caesar') {
+                decryptedText = caesarCipher(text, -parseInt(key));  // Negative shift for decryption
+            } else if (encryptionType === 'vigenere') {
+                decryptedText = vigenereCipher(text, key, true);  // Decryption for Vigenère
+            } else if (encryptionType === 'transposition') {
+                decryptedText = transpositionDecrypt(text);  // Transposition Decryption
+            } else if (encryptionType === 'playfair') {
+                decryptedText = playfairDecrypt(text, key);  // Playfair Decryption
+            }
+
+            document.getElementById('outputText').innerText = decryptedText;
+        }
+
+        // Caesar Cipher Encryption and Decryption
+        function caesarCipher(str, shift) {
+            return str.split('')
+                      .map(char => {
+                          if (/[a-zA-Z]/.test(char)) {
+                              const code = char.charCodeAt(0);
+                              const base = (char === char.toUpperCase()) ? 65 : 97;
+                              return String.fromCharCode(((code - base + shift) % 26 + 26) % 26 + base);
+                          }
+                          return char;
+                      })
+                      .join('');
+        }
+
+        // Vigenère Cipher Encryption and Decryption
+        function vigenereCipher(str, key, decrypt = false) {
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const normalizedKey = key.toUpperCase();
+            let keyIndex = 0;
+            return str.split('')
+                      .map(char => {
+                          if (/[a-zA-Z]/.test(char)) {
+                              const isUpper = char === char.toUpperCase();
+                              const alphabetIndex = alphabet.indexOf(char.toUpperCase());
+                              const keyShift = alphabet.indexOf(normalizedKey[keyIndex % key.length].toUpperCase());
+                              const shift = decrypt ? -keyShift : keyShift;
+                              const newIndex = (alphabetIndex + shift + 26) % 26;
+                              const resultChar = alphabet[newIndex];
+                              keyIndex++;
+                              return isUpper ? resultChar : resultChar.toLowerCase();
+                          }
+                          return char;
+                      })
+                      .join('');
+        }
+
+        // Transposition Cipher Encryption and Decryption
+        function transpositionEncrypt(text) {
+            const rows = Math.ceil(text.length / 5);
+            let encryptedText = '';
+            for (let i = 0; i < 5; i++) {
+                for (let j = i; j < text.length; j += 5) {
+                    encryptedText += text[j];
+                }
+            }
+            return encryptedText;
+        }
+
+        function transpositionDecrypt(text) {
+            const columns = 5;
+            const rows = Math.ceil(text.length / columns);
+            let grid = new Array(rows).fill("").map(() => new Array(columns).fill(""));
+            let index = 0;
+            for (let i = 0; i < columns; i++) {
+                for (let j = 0; j < rows; j++) {
+                    if (index < text.length) {
+                        grid[j][i] = text[index++];
+                    }
+                }
+            }
+            let decryptedText = "";
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < columns; j++) {
+                    decryptedText += grid[i][j];
+                }
+            }
+            return decryptedText;
+        }
+
+        // Playfair Cipher Encryption and Decryption
+        function playfairEncrypt(plaintext, key) {
+            const grid = createPlayfairGrid(key);
+            let digraphs = createDigraphs(plaintext);
+            let encryptedText = '';
+            digraphs.forEach(digraph => {
+                const [row1, col1] = findPosition(digraph[0], grid);
+                const [row2, col2] = findPosition(digraph[1], grid);
+                if (row1 === row2) {
+                    encryptedText += grid[row1][(col1 + 1) % 5];
+                    encryptedText += grid[row2][(col2 + 1) % 5];
+                } else if (col1 === col2) {
+                    encryptedText += grid[(row1 + 1) % 5][col1];
+                    encryptedText += grid[(row2 + 1) % 5][col2];
+                } else {
+                    encryptedText += grid[row1][col2];
+                    encryptedText += grid[row2][col1];
+                }
+            });
+            return encryptedText;
+        }
+
+        function playfairDecrypt(ciphertext, key) {
+            const grid = createPlayfairGrid(key);
+            let digraphs = createDigraphs(ciphertext);
+            let decryptedText = '';
+            digraphs.forEach(digraph => {
+                const [row1, col1] = findPosition(digraph[0], grid);
+                const [row2, col2] = findPosition(digraph[1], grid);
+                if (row1 === row2) {
+                    decryptedText += grid[row1][(col1 + 4) % 5];
+                    decryptedText += grid[row2][(col2 + 4) % 5];
+                } else if (col1 === col2) {
+                    decryptedText += grid[(row1 + 4) % 5][col1];
+                    decryptedText += grid[(row2 + 4) % 5][col2];
+                } else {
+                    decryptedText += grid[row1][col2];
+                    decryptedText += grid[row2][col1];
+                }
+            });
+            return decryptedText;
+        }
+
+        function createPlayfairGrid(key) {
+            const alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
+            let grid = [];
+            let keySet = new Set();
+            for (let char of key.toUpperCase()) {
+                if (alphabet.includes(char) && !keySet.has(char)) {
+                    grid.push(char);
+                    keySet.add(char);
+                }
+            }
+            for (let char of alphabet) {
+                if (!keySet.has(char)) {
+                    grid.push(char);
+                    keySet.add(char);
+                }
+            }
+            let grid2D = [];
+            for (let i = 0; i < 5; i++) {
+                grid2D.push(grid.slice(i * 5, (i + 1) * 5));
+            }
+            return grid2D;
+        }
+
+        function findPosition(char, grid) {
+            for (let row = 0; row < 5; row++) {
+                for (let col = 0; col < 5; col++) {
+                    if (grid[row][col] === char) {
+                        return [row, col];
+                    }
+                }
+            }
+            return [-1, -1];
+        }
+
+        function createDigraphs(plaintext) {
+            let digraphs = [];
+            let cleanedText = plaintext.replace(/[^A-Za-z]/g, '').toUpperCase();
             for (let i = 0; i < cleanedText.length; i += 2) {
                 let pair = cleanedText[i];
                 if (i + 1 < cleanedText.length) {
-                    if (cleanedText[i] === cleanedText[i + 1]) {
-                        pair += 'X';
-                        i--;
-                    } else {
-                        pair += cleanedText[i + 1];
-                    }
+                    pair += cleanedText[i + 1];
                 } else {
                     pair += 'X';
                 }
                 digraphs.push(pair);
             }
-
-            let result = '';
-            digraphs.forEach(pair => {
-                const [first, second] = pair;
-                const firstIndex = matrix.indexOf(first);
-                const secondIndex = matrix.indexOf(second);
-
-                const firstRow = Math.floor(firstIndex / 5);
-                const firstCol = firstIndex % 5;
-                const secondRow = Math.floor(secondIndex / 5);
-                const secondCol = secondIndex % 5;
-
-                if (firstRow === secondRow) {
-                    result += matrix[firstRow * 5 + (firstCol + 1) % 5];
-                    result += matrix[secondRow * 5 + (secondCol + 1) % 5];
-                } else if (firstCol === secondCol) {
-                    result += matrix[((firstRow + 1) % 5) * 5 + firstCol];
-                    result += matrix[((secondRow + 1) % 5) * 5 + secondCol];
-                } else {
-                    result += matrix[firstRow * 5 + secondCol];
-                    result += matrix[secondRow * 5 + firstCol];
-                }
-            });
-
-            return result;
+            return digraphs;
         }
 
-        function encryptText() {
-            const inputText = document.getElementById("inputText").value.toUpperCase().replace(/[^A-Z]/g, "");
-            const encryptionType = document.getElementById("encryptionType").value;
-            const key = document.getElementById("encryptionKey").value.toUpperCase().replace(/[^A-Z]/g, "");
-
-            if (!inputText) {
-                document.getElementById("outputText").innerText = "Please enter some text to encrypt!";
-                return;
-            }
-
-            // تحقق من صحة المفتاح في حال كان التشفير Caesar
-            if (encryptionType === "caesar") {
-                const shift = document.getElementById("encryptionKey").value;
-                if (isNaN(shift) || shift === "") {
-                    document.getElementById("errorMessage").innerText = "Caesar cipher requires a numeric key!";
-                    return;
-                }
-                const shiftValue = parseInt(shift);
-                document.getElementById("outputText").innerText = caesarCipher(inputText, shiftValue);
-            } else if (encryptionType === "playfair") {
-                document.getElementById("outputText").innerText = playfairCipher(inputText, key);
-            }
-        }
     </script>
 </body>
 </html>
