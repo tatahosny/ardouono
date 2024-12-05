@@ -1,415 +1,298 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Text Encryption</title>
+    <title>تعلم التشفير</title>
     <style>
-        * {
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
             font-family: Arial, sans-serif;
-            background: #2c3e50;
-            color: white;
+            background: #f4f4f4;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .background {
-            position: absolute;
-            top: -20%;
-            left: -20%;
-            width: 140%;
-            height: 140%;
-            background: url('https://e.top4top.io/p_3260t1fdz1.png') no-repeat center center/cover;
-            filter: blur(10px);
-            animation: move-horizontal 20s infinite alternate ease-in-out;
-            z-index: -1;
-        }
-
-        @keyframes move-horizontal {
-            from {
-                transform: translateX(-5%);
-            }
-            to {
-                transform: translateX(5%);
-            }
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            width: 400px;
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
             text-align: center;
-            color: #333;
+            margin-top: 20px;
         }
 
-        .logo {
-            width: 100px;
+        .header h1 {
+            font-size: 30px;
             margin-bottom: 20px;
         }
 
-        .form-group {
-            margin-bottom: 20px;
+        .section {
+            background: white;
+            border-radius: 10px;
+            margin: 20px 0;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        label {
-            display: block;
+        .section h2 {
+            font-size: 24px;
+            color: #007bff;
+        }
+
+        .section p {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .footer {
+            background-color: #f8f9fa;
+            text-align: center;
+            padding: 10px;
+            color: #777;
+            border-top: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .footer-link {
+            color: #007bff;
+            text-decoration: none;
             font-weight: bold;
-            margin-bottom: 5px;
-            color: #333;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
         }
 
-        input, select, output {
-            width: 100%;
-            padding: 10px;
+        .footer-link:hover {
+            color: #ffdd00;
+            text-shadow: 0 0 10px #ffdd00, 0 0 20px #ffdd00, 0 0 30px #ffdd00;
+        }
+
+        .video-container, .example-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .input-field {
+            padding: 12px 20px;
             font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-
-        output {
-            display: block;
             margin-top: 10px;
-            background: #f5f5f5;
-            color: #333;
-            padding: 10px;
+            border: 2px solid #ccc;
             border-radius: 5px;
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+            background-color: #fff;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        button {
-            background: #007bff;
-            color: #fff;
+        .input-field:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+            outline: none;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn-container button {
             padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
             border: none;
             border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
-            margin-top: 10px;
         }
 
-        button:hover {
-            background: #0056b3;
+        .btn-container button:hover {
+            background-color: #0056b3;
         }
-
-        .error {
-            color: red;
-            margin-top: 10px;
-        }
-
-        .success {
-            color: green;
-            margin-top: 10px;
-        }
-
-        .footer {
-            position: absolute;
-            bottom: 20px;
-            width: 100%;
-            text-align: center;
-            color: #777;
-        }
-
-        .button-container {
-            margin-top: 20px;
-        }
-
     </style>
 </head>
 <body>
-    <div class="background"></div>
     <div class="container">
-        <img src="logo.png" alt="University Logo" class="logo">
-        <h1>Welcome to Text Encryption</h1>
-        <div class="form-group">
-            <label for="inputText">Enter Text:</label>
-            <input type="text" id="inputText" placeholder="Type your text here">
+        <div class="header">
+            <h1>تم بواسطة Mostafa Mohamed Hosny&ALI IBRAHEM &CODE 14 TEAM</h1>
+            <p>في هذه الصفحة، ستتعلم كيفية تطبيق طرق التشفير الأربعة:</p>
         </div>
-        <div class="form-group">
-            <label for="encryptionType">Select Encryption Type:</label>
-            <select id="encryptionType" onchange="toggleKeyInput()">
-                <option value="caesar">Caesar Cipher</option>
-                <option value="vigenere">Vigenère Cipher</option>
-                <option value="transposition">Transposition Cipher</option>
-                <option value="playfair">Playfair Cipher</option>
-            </select>
-        </div>
-        <div class="form-group" id="keyInputGroup" style="display: none;">
-            <label id="keyLabel" for="encryptionKey">Enter Key:</label>
-            <input type="text" id="encryptionKey" placeholder="Enter encryption key">
-            <div id="errorMessage" class="error"></div>
-        </div>
-        <div class="form-group">
-            <button onclick="encryptText()">Encrypt</button>
-            <button onclick="decryptText()">Decrypt</button>
-        </div>
-        <div class="form-group">
-            <label for="outputText">Encrypted/Fooled Text:</label>
-            <output id="outputText"></output>
-        </div>
-        <div id="statusMessage"></div>
-        <div class="button-container">
-            <button onclick="window.location.href='learn.html'">تعلم التشفير</button>
-        </div>
-        <div class="form-group">
-            <button onclick="sendToArduino()">Send to Arduino</button>
-        </div>
+
+        <!-- محتوى الصفحة الرئيسي هنا -->
+
     </div>
 
+    <div class="footer">
+        <a href="https://www.facebook.com/tata.hosny.7" target="_blank" class="footer-link">
+            Website created by Mostafa Mohamed Hosny
+            &alli IBRAHEM
+        </a>
+    </div>
+    <div class="container">
+        <div id="google_translate_element"></div>
+        <br>
+
+        <!-- شرح Caesar Cipher -->
+        <div class="section">
+            <h2>التشفير باستخدام شفرة القيصر (Caesar Cipher)</h2>
+            <p>التشفير باستخدام شفرة القيصر هو أسلوب بسيط من أساليب التشفير يعتمد على تحريك الحروف بمقدار معين داخل الأبجدية. على سبيل المثال، إذا كان لدينا الكلمة "ABC" واستخدمنا مفتاح التشفير 3، فإن النتيجة ستكون "DEF".</p>
+            <h3>كيف تقوم بالتشفير باستخدام شفرة القيصر؟</h3>
+            <ol>
+                <li>اختر نصًا تريد تشفيره.</li>
+                <li>حدد مفتاح التشفير (رقمًا) يُضاف إلى كل حرف.</li>
+                <li>انتقل إلى الحرف الذي يليه في الأبجدية باستخدام المفتاح.</li>
+            </ol>
+            <h3>مثال:</h3>
+            <p>النص: "HELLO"</p>
+            <p>المفتاح: 3</p>
+            <table>
+                <tr>
+                    <th>الحرف</th>
+                    <th>الحرف المشفر</th>
+                </tr>
+                <tr>
+                    <td>H</td>
+                    <td>K</td>
+                </tr>
+                <tr>
+                    <td>E</td>
+                    <td>H</td>
+                </tr>
+                <tr>
+                    <td>L</td>
+                    <td>O</td>
+                </tr>
+                <tr>
+                    <td>L</td>
+                    <td>O</td>
+                </tr>
+                <tr>
+                    <td>O</td>
+                    <td>R</td>
+                </tr>
+            </table>
+            <p>النتيجة: "KHORR"</p>
+
+            <!-- فيديو من يوتيوب -->
+            <div class="video-container">
+                <h3>شاهد فيديو يشرح طريقة التشفير باستخدام شفرة القيصر:</h3>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/L9d4yrZVGws?si=72_AzkSDkNU8suEg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
+            <!-- مثال المستخدم للتفاعل -->
+            <div class="example-container">
+                <h3>مثال لتجربة التشفير باستخدام شفرة القيصر:</h3>
+                <p>جرب تشفير النص التالي باستخدام مفتاح 3:</p>
+                <p>النص: "WORLD"</p>
+                <input type="text" id="caesar-input" class="input-field" placeholder="أدخل الإجابة هنا">
+                <button onclick="checkCaesarCipher()">أرسل الإجابة</button>
+                <p id="caesar-feedback" class="feedback"></p>
+            </div>
+        </div>
+
+        <!-- شرح Vigenère Cipher -->
+        <div class="section">
+            <h3>التشفير باستخدام شفرة فيجنير (Vigenère Cipher)</h3>
+            <p>شفرة فيجنير هي طريقة لتشفير النص باستخدام كلمة سر أو مفتاح. بدلاً من تحريك الحروف بمقدار ثابت، يتم تحريك الحروف بناءً على الحروف في المفتاح.</p>
+
+            <!-- فيديو من يوتيوب -->
+            <div class="video-container">
+                <h3>شاهد فيديو يشرح طريقة التشفير باستخدام شفرة Vigenère:</h3>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/AagPsvedGHk?si=odShh9RnhQ-InMbz" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
+            <!-- مثال المستخدم للتفاعل -->
+            <div class="example-container">
+                <h3>مثال لتجربة التشفير باستخدام شفرة فيجنير:</h3>
+                <p>جرب تشفير النص التالي باستخدام المفتاح "KEY":</p>
+                <p>النص: "HELLO"</p>
+                <input type="text" id="vigenere-input" class="input-field" placeholder="أدخل الإجابة هنا">
+                <button onclick="checkVigenereCipher()">أرسل الإجابة</button>
+                <p id="vigenere-feedback" class="feedback"></p>
+            </div>
+        </div>
+
+        <!-- شرح Transposition Cipher -->
+        <div class="section">
+            <h2>التشفير باستخدام شفرة التبديل (Transposition Cipher)</h2>
+            <p>شفرة التبديل هي طريقة لتغيير ترتيب الحروف في النص دون تغيير الحروف نفسها. يتم التشفير عن طريق تغيير ترتيب الحروف وفقًا لمفتاح معين.</p>
+            
+            <!-- فيديو من يوتيوب -->
+            <div class="video-container">
+                <h3>شاهد فيديو يشرح طريقة التشفير باستخدام شفرة التبديل:</h3>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/1mdYUbMFBsw?si=ncNoUwouL7MKqOdc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
+            <!-- مثال المستخدم للتفاعل -->
+            <div class="example-container">
+                <h3>مثال لتجربة التشفير باستخدام شفرة التبد </div>يل:</h3>
+                <p>جرب تشفير النص التالي باستخدام مفتاح 4:</p>
+                <p>النص: "HELLO WORLD"</p>
+                <input type="text" id="transposition-input" class="input-field" placeholder="أدخل الإجابة هنا">
+                <button onclick="checkTranspositionCipher()">أرسل الإجابة</button>
+                <p id="transposition-feedback" class="feedback"></p>
+            </div>
+        </div>
+
+        <!-- شرح Playfair Cipher -->
+        <div class="section">
+            <h2>التشفير باستخدام شفرة بلاي فير (Playfair Cipher)</h2>
+            <p>تشفير بلاي فير هو نوع من التشفير الثنائي حيث يتم تشفير الحروف في مجموعات مكونة من حرفين.</p>
+            
+            <!-- فيديو من يوتيوب -->
+            <div class="video-container">
+                <h3>شاهد فيديو يشرح طريقة التشفير باستخدام شفرة بلاي فير:</h3>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/FoCQDGrIOKo?si=sAZ1PrNUSXRPDa8U" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
+            <!-- مثال المستخدم للتفاعل -->
+            <div class="example-container">
+                <h3>مثال لتجربة التشفير باستخدام شفرة بلاي فير:</h3>
+                <p>جرب تشفير النص التالي باستخدام المفتاح "KEY":</p>
+                <p>النص: "HELLO"</p>
+                <input type="text" id="playfair-input" class="input-field" placeholder="أدخل الإجابة هنا">
+                <button onclick="checkPlayfairCipher()">أرسل الإجابة</button>
+                <p id="playfair-feedback" class="feedback"></p>
+            </div>
+        </div>
+        <div class="footer">
+            <a href="https://example.com" target="_blank" class="footer-link">
+                Website created by Mostafa Mohamed Hosny
+            </a>
+        </div>
+
     <script>
-        let port;
-        let writer;
-
-        async function sendToArduino() {
-            const text = document.getElementById('inputText').value;
-            if (!text) {
-                alert("Please enter some text to send to Arduino!");
-                return;
-            }
-
-            try {
-                if (!port) {
-                    // Request permission to connect to a USB serial device
-                    port = await navigator.serial.requestPort();
-                    await port.open({ baudRate: 9600 });
-                    writer = port.writable.getWriter();
-                }
-
-                const encoder = new TextEncoder();
-                const data = encoder.encode(text);
-                await writer.write(data);
-
-                alert("Data sent to Arduino!");
-            } catch (error) {
-                console.error("Error sending data to Arduino:", error);
-            }
+        function checkCaesarCipher() {
+            let userAnswer = document.getElementById("caesar-input").value.trim().toUpperCase();
+            let correctAnswer = "KHORR";
+            let feedback = userAnswer === correctAnswer ? "إجابتك صحيحة!" : "إجابتك خاطئة. حاول مرة أخرى.";
+            document.getElementById("caesar-feedback").innerText = feedback;
         }
 
-        function toggleKeyInput() {
-    const encryptionType = document.getElementById('encryptionType').value;
-    const keyInputGroup = document.getElementById('keyInputGroup');
-    keyInputGroup.style.display = 'block';  // دائماً عرض خانة المفتاح
-   }
-
-        function encryptText() {
-            const text = document.getElementById('inputText').value;
-            const encryptionType = document.getElementById('encryptionType').value;
-            const key = document.getElementById('encryptionKey').value;
-
-            if (!text) {
-                document.getElementById('outputText').innerText = 'Please enter text to encrypt!';
-                return;
-            }
-
-            let encryptedText = '';
-            if (encryptionType === 'caesar') {
-                encryptedText = caesarCipher(text, parseInt(key));  // Caesar Cipher Encryption
-            } else if (encryptionType === 'vigenere') {
-                encryptedText = vigenereCipher(text, key, false);  // Vigenère Cipher Encryption
-            } else if (encryptionType === 'transposition') {
-                encryptedText = transpositionEncrypt(text);  // Transposition Encryption
-            } else if (encryptionType === 'playfair') {
-                encryptedText = playfairEncrypt(text, key);  // Playfair Cipher Encryption
-            }
-
-            document.getElementById('outputText').innerText = encryptedText;
+        function checkVigenereCipher() {
+            let userAnswer = document.getElementById("vigenere-input").value.trim().toUpperCase();
+            let correctAnswer = "RIJVS";
+            let feedback = userAnswer === correctAnswer ? "إجابتك صحيحة!" : "إجابتك خاطئة. حاول مرة أخرى.";
+            document.getElementById("vigenere-feedback").innerText = feedback;
         }
 
-        function decryptText() {
-            const text = document.getElementById('inputText').value;
-            const encryptionType = document.getElementById('encryptionType').value;
-            const key = document.getElementById('encryptionKey').value;
-
-            if (!text) {
-                document.getElementById('outputText').innerText = 'Please enter text to decrypt!';
-                return;
-            }
-
-            let decryptedText = '';
-            if (encryptionType === 'caesar') {
-                decryptedText = caesarCipher(text, -parseInt(key));  // Negative shift for decryption
-            } else if (encryptionType === 'vigenere') {
-                decryptedText = vigenereCipher(text, key, true);  // Decryption for Vigenère
-            } else if (encryptionType === 'transposition') {
-                decryptedText = transpositionDecrypt(text);  // Transposition Decryption
-            } else if (encryptionType === 'playfair') {
-                decryptedText = playfairDecrypt(text, key);  // Playfair Decryption
-            }
-
-            document.getElementById('outputText').innerText = decryptedText;
+        function checkTranspositionCipher() {
+            let userAnswer = document.getElementById("transposition-input").value.trim().toUpperCase();
+            let correctAnswer = "HOLEL WRLOD";
+            let feedback = userAnswer === correctAnswer ? "إجابتك صحيحة!" : "إجابتك خاطئة. حاول مرة أخرى.";
+            document.getElementById("transposition-feedback").innerText = feedback;
         }
 
-        // Caesar Cipher Encryption and Decryption
-        function caesarCipher(str, shift) {
-            return str.split('')
-                      .map(char => {
-                          if (/[a-zA-Z]/.test(char)) {
-                              const code = char.charCodeAt(0);
-                              const base = (char === char.toUpperCase()) ? 65 : 97;
-                              return String.fromCharCode(((code - base + shift) % 26 + 26) % 26 + base);
-                          }
-                          return char;
-                      })
-                      .join('');
+        function checkPlayfairCipher() {
+            let userAnswer = document.getElementById("playfair-input").value.trim().toUpperCase();
+            let correctAnswer = "GDDLO";
+            let feedback = userAnswer === correctAnswer ? "إجابتك صحيحة!" : "إجابتك خاطئة. حاول مرة أخرى.";
+            document.getElementById("playfair-feedback").innerText = feedback;
         }
-
-        // Vigenère Cipher Encryption and Decryption
-        function vigenereCipher(str, key, decrypt = false) {
-            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            const normalizedKey = key.toUpperCase();
-            let keyIndex = 0;
-            return str.split('')
-                      .map(char => {
-                          if (/[a-zA-Z]/.test(char)) {
-                              const isUpper = char === char.toUpperCase();
-                              const alphabetIndex = alphabet.indexOf(char.toUpperCase());
-                              const keyShift = alphabet.indexOf(normalizedKey[keyIndex % key.length].toUpperCase());
-                              const shift = decrypt ? -keyShift : keyShift;
-                              const newIndex = (alphabetIndex + shift + 26) % 26;
-                              const resultChar = alphabet[newIndex];
-                              keyIndex++;
-                              return isUpper ? resultChar : resultChar.toLowerCase();
-                          }
-                          return char;
-                      })
-                      .join('');
-        }
-
-        // Transposition Cipher Encryption and Decryption
-        function transpositionEncrypt(text) {
-            const rows = Math.ceil(text.length / 5);
-            let encryptedText = '';
-            for (let i = 0; i < 5; i++) {
-                for (let j = i; j < text.length; j += 5) {
-                    encryptedText += text[j];
-                }
-            }
-            return encryptedText;
-        }
-
-        function transpositionDecrypt(text) {
-            const columns = 5;
-            const rows = Math.ceil(text.length / columns);
-            let grid = new Array(rows).fill("").map(() => new Array(columns).fill(""));
-            let index = 0;
-            for (let i = 0; i < columns; i++) {
-                for (let j = 0; j < rows; j++) {
-                    if (index < text.length) {
-                        grid[j][i] = text[index++];
-                    }
-                }
-            }
-            let decryptedText = "";
-            for (let i = 0; i < rows; i++) {
-                for (let j = 0; j < columns; j++) {
-                    decryptedText += grid[i][j];
-                }
-            }
-            return decryptedText;
-        }
-
-        // Playfair Cipher Encryption and Decryption
-        function playfairEncrypt(plaintext, key) {
-            const grid = createPlayfairGrid(key);
-            let digraphs = createDigraphs(plaintext);
-            let encryptedText = '';
-            digraphs.forEach(digraph => {
-                const [row1, col1] = findPosition(digraph[0], grid);
-                const [row2, col2] = findPosition(digraph[1], grid);
-                if (row1 === row2) {
-                    encryptedText += grid[row1][(col1 + 1) % 5];
-                    encryptedText += grid[row2][(col2 + 1) % 5];
-                } else if (col1 === col2) {
-                    encryptedText += grid[(row1 + 1) % 5][col1];
-                    encryptedText += grid[(row2 + 1) % 5][col2];
-                } else {
-                    encryptedText += grid[row1][col2];
-                    encryptedText += grid[row2][col1];
-                }
-            });
-            return encryptedText;
-        }
-
-        function playfairDecrypt(ciphertext, key) {
-            const grid = createPlayfairGrid(key);
-            let digraphs = createDigraphs(ciphertext);
-            let decryptedText = '';
-            digraphs.forEach(digraph => {
-                const [row1, col1] = findPosition(digraph[0], grid);
-                const [row2, col2] = findPosition(digraph[1], grid);
-                if (row1 === row2) {
-                    decryptedText += grid[row1][(col1 + 4) % 5];
-                    decryptedText += grid[row2][(col2 + 4) % 5];
-                } else if (col1 === col2) {
-                    decryptedText += grid[(row1 + 4) % 5][col1];
-                    decryptedText += grid[(row2 + 4) % 5][col2];
-                } else {
-                    decryptedText += grid[row1][col2];
-                    decryptedText += grid[row2][col1];
-                }
-            });
-            return decryptedText;
-        }
-
-        function createPlayfairGrid(key) {
-            const alphabet = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
-            let grid = [];
-            let keySet = new Set();
-            for (let char of key.toUpperCase()) {
-                if (alphabet.includes(char) && !keySet.has(char)) {
-                    grid.push(char);
-                    keySet.add(char);
-                }
-            }
-            for (let char of alphabet) {
-                if (!keySet.has(char)) {
-                    grid.push(char);
-                    keySet.add(char);
-                }
-            }
-            let grid2D = [];
-            for (let i = 0; i < 5; i++) {
-                grid2D.push(grid.slice(i * 5, (i + 1) * 5));
-            }
-            return grid2D;
-        }
-
-        function findPosition(char, grid) {
-            for (let row = 0; row < 5; row++) {
-                for (let col = 0; col < 5; col++) {
-                    if (grid[row][col] === char) {
-                        return [row, col];
-                    }
-                }
-            }
-            return [-1, -1];
-        }
-
-        function createDigraphs(plaintext) {
-            let digraphs = [];
-            let cleanedText = plaintext.replace(/[^A-Za-z]/g, '').toUpperCase();
-            for (let i = 0; i < cleanedText.length; i += 2) {
-                let pair = cleanedText[i];
-                if (i + 1 < cleanedText.length) {
-                    pair += cleanedText[i + 1];
-                } else {
-                    pair += 'X';
-                }
-                digraphs.push(pair);
-            }
-            return digraphs;
-        }
-
     </script>
 </body>
 </html>
