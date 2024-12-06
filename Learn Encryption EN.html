@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn Encryption</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .header h1 {
+            font-size: 30px;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 10px;
+            margin: 20px 0;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            font-size: 24px;
+            color: #007bff;
+        }
+
+        .section p {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .footer {
+            background-color: #f8f9fa;
+            text-align: center;
+            padding: 10px;
+            color: #777;
+            border-top: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .footer-link {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: #ffdd00;
+            text-shadow: 0 0 10px #ffdd00, 0 0 20px #ffdd00, 0 0 30px #ffdd00;
+        }
+
+        .video-container, .example-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .input-field {
+            padding: 12px 20px;
+            font-size: 16px;
+            margin-top: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+            background-color: #fff;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+            outline: none;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn-container button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .btn-container button:hover {
+            background-color: #0056b3;
+        }
+
+        .container div button{
+            color: white;
+            background-color: #8436fa;
+            padding: 15px;
+            font-size: 1.5em;
+            margin-left: 10px;
+            border-radius: 5px;
+            border: 0;
+            transition: 0.7s ease ;
+            
+
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Created by Mostafa Mohamed Hosny & Ali Ibrahim </h1>
+            <p>On this page, you will learn how to apply the four encryption methods:</p>
+        </div>
+        <div>
+            <a href="learn.html"><button>العربية</button></a>
+            
+          </div>
+
+    </div>
+
+    <div class="footer">
+        <a href="https://www.facebook.com/tata.hosny.7" target="_blank" class="footer-link">
+            Website created by Mostafa Mohamed Hosny
+            & Ali Ibrahim
+        </a>
+    </div>
+    <div class="container">
+        <div id="google_translate_element"></div>
+        <br>
+
+        <!-- Caesar Cipher Explanation -->
+        <div class="section">
+            <h2>Encryption using Caesar Cipher</h2>
+            <p>The Caesar Cipher is a simple encryption method based on shifting letters by a specific number within the alphabet. For example, if we have the word "ABC" and use an encryption key of 3, the result will be "DEF".</p>
+            <h3>How to encrypt using Caesar Cipher?</h3>
+            <ol>
+                <li>Choose a text to encrypt.</li>
+                <li>Determine the encryption key (a number) to add to each letter.</li>
+                <li>Shift each letter by the key value within the alphabet.</li>
+            </ol>
+            <h3>Example:</h3>
+            <p>Text: "HELLO"</p>
+            <p>Key: 3</p>
+            <table>
+                <tr>
+                    <th>Letter</th>
+                    <th>Encrypted Letter</th>
+                </tr>
+                <tr>
+                    <td>H</td>
+                    <td>K</td>
+                </tr>
+                <tr>
+                    <td>E</td>
+                    <td>H</td>
+                </tr>
+                <tr>
+                    <td>L</td>
+                    <td>O</td>
+                </tr>
+                <tr>
+                    <td>L</td>
+                    <td>O</td>
+                </tr>
+                <tr>
+                    <td>O</td>
+                    <td>R</td>
+                </tr>
+            </table>
+            <p>Result: "KHORR"</p>
+
+            <!-- YouTube Video -->
+            <div class="video-container">
+                <h3>Watch a video explaining Caesar Cipher encryption:</h3>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/L9d4yrZVGws?si=72_AzkSDkNU8suEg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
+            <!-- User Interactive Example -->
+            <div class="example-container">
+                <h3>Try encrypting using Caesar Cipher:</h3>
+                <p>Encrypt the following text using a key of 3:</p>
+                <p>Text: "WORLD"</p>
+                <input type="text" id="caesar-input" class="input-field" placeholder="Enter your answer here">
+                <button onclick="checkCaesarCipher()">Submit Answer</button>
+                <p id="caesar-feedback" class="feedback"></p>
+            </div>
+        </div>
+
+        <!-- Vigenère Cipher Explanation -->
+        <div class="section">
+            <h3>Encryption using Vigenère Cipher</h3>
+            <p>The Vigenère Cipher is a method of encrypting text using a password or key. Instead of shifting letters by a fixed amount, it shifts them based on the letters in the key.</p>
+
+            <!-- YouTube Video -->
+            <div class="video-container">
+                <h3>Watch a video explaining Vigenère Cipher encryption:</h3>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/AagPsvedGHk?si=odShh9RnhQ-InMbz" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
+            <!-- User Interactive Example -->
+            <div class="example-container">
+                <h3>Try encrypting using Vigenère Cipher:</h3>
+                <p>Encrypt the following text using the key "KEY":</p>
+                <p>Text: "HELLO"</p>
+                <input type="text" id="vigenere-input" class="input-field" placeholder="Enter your answer here">
+                <button onclick="checkVigenereCipher()">Submit Answer</button>
+                <p id="vigenere-feedback" class="feedback"></p>
+            </div>
+        </div>
+
+        <!-- Transposition Cipher Explanation -->
+        <div class="section">
+            <h2>Encryption using Transposition Cipher</h2>
+            <p>The Transposition Cipher changes the order of letters in the text without changing the letters themselves. Encryption is done by rearranging the letters according to a specific key.</p>
+            
+            <!-- YouTube Video -->
+            <div class="video-container">
+                <h3>Watch a video explaining Transposition Cipher encryption:</h3>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/1mdYUbMFBsw?si=ncNoUwouL7MKqOdc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
+            <!-- User Interactive Example -->
+            <div class="example-container">
+                <h3>Try encrypting using Transposition Cipher:</h3>
+                <p>Encrypt the following text using key 4:</p>
+                <p>Text: "HELLO WORLD"</p>
+                <input type="text" id="transposition-input" class="input-field" placeholder="Enter your answer here">
+                <button onclick="checkTranspositionCipher()">Submit Answer</button>
+                <p id="transposition-feedback" class="feedback
+            </div>
+            
