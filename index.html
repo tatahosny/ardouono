@@ -157,6 +157,7 @@
             <div class="form-group">
                 <label for="encryptionType">Select Encryption Type:</label>
                 <select id="encryptionType" onchange="toggleKeyInput()">
+                    <option value="caesar">select</option>
                     <option value="caesar">Caesar Cipher</option>
                     <option value="vigenere">Vigenère Cipher</option>
                     <option value="transposition">Transposition Cipher</option>
@@ -185,7 +186,7 @@
             </div>
             <div class="footer">
                 Website created by <a href="https://www.facebook.com/tata.hosny.7" target="_blank">Mostafa Mohamed Hosny</a>
-                ALLI IBRAHEM &CODE 14
+                &<a href="https://www.facebook.com/profile.php?id=100065037683194" target="_blank">ALLI IBRAHEM</a> &CODE 14
             </div>
         </div>
     </div>
@@ -202,7 +203,7 @@
 
     try {
         if (!port) {
-            // Request permission to connect to a USB serial device
+            // طلب الإذن بالاتصال بالجهاز
             port = await navigator.serial.requestPort();
             await port.open({ baudRate: 9600 });
             writer = port.writable.getWriter();
@@ -212,11 +213,14 @@
         const data = encoder.encode(encryptedText);
         await writer.write(data);
 
-        alert("Encrypted data sent to Arduino!");
+        // تحقق إذا تمت الكتابة بدون أخطاء
+        alert("Encrypted data sent to Arduino successfully!");
     } catch (error) {
         console.error("Error sending data to Arduino:", error);
+        alert("Failed to send data to Arduino. Please check the connection and try again.");
     }
 }
+
 
         function toggleKeyInput() {
     const encryptionType = document.getElementById('encryptionType').value;
